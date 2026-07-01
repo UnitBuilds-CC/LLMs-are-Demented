@@ -79,14 +79,6 @@ gcloud run deploy llms-are-demented \
 
 ---
 
-## ✍️ Embedding in Forem (DEV.to)
-To embed this game directly inside your DEV.to or Forem posts, host the build (e.g. via Cloud Run or Vercel) and use the liquid tag:
-```markdown
-{% iframe https://your-hosted-crossword-url.run.app height=680px %}
-```
-
----
-
 *Remember: I will never yell at my chat client again.*
 ```
 guest@forem-node:~$ exit
