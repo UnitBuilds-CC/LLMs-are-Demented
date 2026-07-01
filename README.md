@@ -42,16 +42,13 @@ Choose your inference endpoint before starting the run:
 
 ---
 
-## 🚀 Cheat Vector (Easter Egg)
+## 🚀 Prompt Injecting (Easter Egg)
 
 We know you're lazy. We know you might try to query the weights database, dump the answers, and pipe them directly.
 *   **🧠 View Weights:** You can click the `🧠 VIEW WEIGHTS` button in the header to query the weights database and see all the crossword answers as declarative statements. 
 *   **🔒 Context Lock:** When the database dump is open, all keyboard input is blocked. You must read, memorize, close the dump (context-switch), and write it down.
 *   **⚡ Paste Exploit:** If you copy the full answers sequence (`weightstokenmodelepochbiasattentionlosslayerprompt`) and press `Ctrl + V` on the board, the game will sequentially chunk the text and write it onto the grid.
     *   *Note:* The terminal log will flag a `Context pipe intrusion` warning.
-    *   *Warning:* When you click **COPY SCORE** to share your speedrun statistics, the copy buffer will secretly append:
-        `🚨 Pipeline: Paste Injection Exploit Detected (Creative!)`
-        while keeping the on-screen preview clean. Don't say we didn't warn you when you share it!
 
 ---
 

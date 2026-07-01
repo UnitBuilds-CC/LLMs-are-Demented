@@ -976,7 +976,7 @@ function copyScoreClipboard() {
     if (pasteDetected) {
         textToCopy = textToCopy.replace(
             '"I will never yell at my chat client again."',
-            '🚨 Pipeline: Paste Injection Exploit Detected (Creative!)\n\n"I will never yell at my chat client again."'
+            '🚨 Pipeline: Prompt Injecting Detected (Creative!)\n\n"I will never yell at my chat client again."'
         );
     }
     
@@ -1212,7 +1212,7 @@ function handlePasteText(text) {
         selectCell(lastWord.r, lastWord.c);
     }
     
-    logToTerminal(`Context pipe intrusion: Injected ${lettersCount} tokens across ${wordsInjected} words.`, "warn");
+    logToTerminal(`Prompt injection: Injected ${lettersCount} tokens across ${wordsInjected} words.`, "warn");
 }
 
 // Hardware Presets for Game Difficulty
