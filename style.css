@@ -744,17 +744,17 @@ input[type="range"]::-webkit-slider-thumb:hover {
         order: 1;
     }
     .playboard-grid {
-        grid-template-columns: 270px 1fr;
+        grid-template-columns: 310px 1fr;
         gap: 0.75rem;
     }
     .board-container {
         padding: 0.4rem;
     }
     .crossword-board {
-        max-width: 260px;
+        max-width: 300px;
     }
     .cell-letter {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
     }
     .cell-number {
         font-size: 0.55rem;
