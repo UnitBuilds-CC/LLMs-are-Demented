@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Gating Crisis: Sparse MoE Router Simulator</title>
+    <meta name="description" content="An interactive Mixture of Experts (MoE) routing game. Balance expert network capacity limits, manage routing noise (temperature), and route incoming multimodal tokens.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="title-container">
+            <h1 id="main-title">The Gating Crisis</h1>
+            <p id="sub-title">🤖 SPARSE MoE ROUTER SIMULATOR v1.0.0</p>
+        </div>
+        <div class="header-actions">
+            <button id="btn-how-to" class="btn" onclick="openHowToModal()">📖 ROUTER PROTOCOL</button>
+            <button id="btn-reset" class="btn btn-danger" onclick="resetGame()">🔄 RESET ROUTER</button>
+            <button id="btn-start" class="btn btn-primary" onclick="startGame()">⚡ INITIATE STREAM</button>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <main>
+        
+        <!-- Left Column: Controls & Log Console -->
+        <div class="sidebar">
+            
+            <!-- Parameters Panel -->
+            <section class="panel" aria-labelledby="controls-title">
+                <h2 id="controls-title" class="panel-title">⚙️ ROUTER HYPERPARAMETERS</h2>
+                
+                <!-- Presets -->
+                <div class="preset-selector-container" style="margin-bottom: 1.2rem;">
+                    <span class="slider-desc" style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-family: var(--font-mono); color: var(--color-cyan);">⚙️ Gating Presets:</span>
+                    <div style="display: flex; gap: 0.4rem;">
+                        <button id="preset-edge" class="btn btn-preset" onclick="applyPreset('edge')" style="flex: 1; padding: 0.35rem 0.2rem; font-size: 0.72rem; text-align: center;">Edge Toaster</button>
+                        <button id="preset-local" class="btn btn-preset active" onclick="applyPreset('local')" style="flex: 1; padding: 0.35rem 0.2rem; font-size: 0.72rem; text-align: center;">Local 8x7B</button>
+                        <button id="preset-datacenter" class="btn btn-preset" onclick="applyPreset('datacenter')" style="flex: 1; padding: 0.35rem 0.2rem; font-size: 0.72rem; text-align: center;">DataCenter</button>
+                    </div>
+                </div>
+
+                <div class="parameter-control">
+                    <!-- Speed Slider -->
+                    <div class="slider-group">
+                        <div class="slider-info">
+                            <span class="slider-label">Token Spawn Interval</span>
+                            <span id="val-speed" class="slider-val">6.8s</span>
+                        </div>
+                        <input type="range" id="slider-speed" min="0.5" max="12.0" value="6.8" step="0.1">
+                        <span class="slider-desc">Interval between new token arrivals. Shorter times increase queue density.</span>
+                    </div>
+
+                    <!-- Movement Speed Slider -->
+                    <div class="slider-group">
+                        <div class="slider-info">
+                            <span class="slider-label">Token Movement Speed</span>
+                            <span id="val-movement-speed" class="slider-val">1.0x</span>
+                        </div>
+                        <input type="range" id="slider-movement-speed" min="0.2" max="3.0" value="1.0" step="0.1">
+                        <span class="slider-desc">Descent speed down the conveyor. Speed up to avoid congestion at fast spawn rates.</span>
+                    </div>
+
+                    <!-- Runway Limit Slider -->
+                    <div class="slider-group">
+                        <div class="slider-info">
+                            <span class="slider-label">Routing Runway Size</span>
+                            <span id="val-runway" class="slider-val">120px</span>
+                        </div>
+                        <input type="range" id="slider-runway" min="60" max="380" value="120" step="10">
+                        <span class="slider-desc">Vertical height of the active routing zone. Larger values provide a longer input runway.</span>
+                    </div>
+
+                    <!-- Noise / Temp Slider -->
+                    <div class="slider-group">
+                        <div class="slider-info">
+                            <span class="slider-label">Routing Noise (Temp)</span>
+                            <span id="val-noise" class="slider-val">0.1</span>
+                        </div>
+                        <input type="range" id="slider-noise" min="0.0" max="1.0" value="0.1" step="0.1">
+                        <span class="slider-desc">Gating noise probability. Higher values randomly deflect tokens to incorrect experts.</span>
+                    </div>
+
+                    <!-- Expert Capacity Limit Slider -->
+                    <div class="slider-group">
+                        <div class="slider-info">
+                            <span class="slider-label">Expert Capacity</span>
+                            <span id="val-capacity" class="slider-val">5</span>
+                        </div>
+                        <input type="range" id="slider-capacity" min="3" max="10" value="5" step="1">
+                        <span class="slider-desc">Maximum token queue limit per Expert. Overloading causes Capacity Drops.</span>
+                    </div>
+
+                    <!-- Expert Count Slider -->
+                    <div class="slider-group">
+                        <div class="slider-info">
+                            <span class="slider-label">Active Expert Count</span>
+                            <span id="val-experts-count" class="slider-val">8</span>
+                        </div>
+                        <input type="range" id="slider-experts-count" min="4" max="8" value="8" step="4">
+                        <span class="slider-desc">Toggles between 4-Expert (Simplified) and 8-Expert (Enterprise) architectures.</span>
+                    </div>
+
+                    <!-- Mask Hints Toggle -->
+                    <div class="slider-group" style="margin-top: 0.5rem; border-top: 1px dashed var(--bg-panel-border); padding-top: 0.8rem;">
+                        <label class="switch-container">
+                            <span class="slider-label" style="font-weight: 600; color: var(--color-cyan);">🕶️ MASK ROUTING HINTS</span>
+                            <div class="switch-wrapper">
+                                <input type="checkbox" id="toggle-hints">
+                                <span class="switch-slider"></span>
+                            </div>
+                        </label>
+                        <span class="slider-desc" style="margin-top: 0.3rem;">Hides recommended key badges on tokens and pulses on expert cards.</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CRT Terminal Logger -->
+            <section class="retro-terminal-wrapper" aria-labelledby="terminal-title">
+                <div id="terminal-title" class="terminal-header">
+                    <span>📟 gating_network.sh</span>
+                    <span id="terminal-status" style="color: #00ff66;">ONLINE</span>
+                </div>
+                <div id="terminal-screen" class="terminal-screen" role="log">
+                    <div id="log-history"></div>
+                    <div class="terminal-prompt-line" style="margin-top: auto; border-top: 1px dashed rgba(0, 255, 102, 0.15); padding-top: 0.4rem;">
+                        <span>gating-router@moe-node:~$ </span><span class="blink-cursor">█</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Center / Right Columns: Token Conveyor and Expert Load Balancer -->
+        <div class="game-area">
+            
+            <!-- Live Metrics Ribbon -->
+            <div class="stats-ribbon" role="region" aria-label="Live Metrics">
+                <div class="stat-card">
+                    <div class="stat-label">Routing Latency</div>
+                    <div id="metric-latency" class="stat-value highlight-green">0ms</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Routing Perplexity</div>
+                    <div id="metric-perplexity" class="stat-value">0%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Capacity Drops</div>
+                    <div id="metric-drops" class="stat-value highlight-red">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Error Rate</div>
+                    <div id="metric-errors" class="stat-value highlight-amber">0%</div>
+                </div>
+            </div>
+
+            <!-- Central Simulation Screen -->
+            <div class="simulation-grid">
+                
+                <!-- Conveyor Belt Queue (Left Side of Main Area) -->
+                <div class="conveyor-panel">
+                    <div class="panel-header">
+                        <span>📥 TOKEN INGESTION PIPELINE</span>
+                    </div>
+                    <div class="conveyor-container">
+                        <!-- Conveyor grid track -->
+                        <div id="conveyor-track" class="conveyor-track">
+                            <!-- Tokens spawn and slide down here -->
+                        </div>
+                        
+                        <!-- Routing Active Gateway Line -->
+                        <div class="router-active-line">
+                            <div class="active-warning-text">ROUTING GATEWAY ACTIVE</div>
+                        </div>
+
+                        <!-- Target Router Gate Threshold -->
+                        <div class="router-gate-line">
+                            <div class="gate-warning-text">GATING THRESHOLD [TOP-2 REQUIRED]</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Hotkey Controls Cheat Bar -->
+                    <div class="hotkey-hint">
+                        <span>⌨️ <strong>Hotkeys:</strong> Press Expert numbers <code>1</code> to <code>8</code> to route tokens. Sparse Top-2 requires 2 selections.</span>
+                    </div>
+                </div>
+
+                <!-- Expert Load-Balancing Grid (Right Side of Main Area) -->
+                <div class="experts-panel">
+                    <div class="panel-header">
+                        <span>🧠 SPARSE EXPERT FFNS</span>
+                    </div>
+                    <div id="experts-grid" class="experts-grid">
+                        <!-- 8 Experts generated via Javascript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Welcome Modal -->
+    <div id="modal-howto" class="modal-overlay active" role="dialog" aria-modal="true" aria-labelledby="modal-howto-title">
+        <div class="modal-content">
+            <h3 id="modal-howto-title" class="modal-title">👾 System Diagnostic: Gating Protocol</h3>
+            <div class="modal-body">
+                <p>Welcome, Systems Architect. You are now controlling the **Routing Gating Network** inside a Sparse Mixture of Experts (MoE) language model.</p>
+                
+                <p style="border: 1px dashed var(--color-cyan); padding: 0.8rem; border-radius: 8px; background: rgba(0, 240, 255, 0.05); font-size: 0.9rem; color: var(--color-cyan); margin-bottom: 1.2rem; line-height: 1.5;">
+                    💡 <strong>MISSION:</strong> A flood of multimodal tokens is entering the ingestion pipeline. For every token that reaches the bottom, you must route it to the <strong>Top-2 most qualified Experts</strong> before it passes the gate threshold.
+                </p>
+
+                <h4>📐 THE EXPERT SPECIALIZATIONS:</h4>
+                <ul class="modal-list">
+                    <li><code>1</code> ➔ <strong>Linguistic Poet:</strong> Processes creative writing, structure, and style <code>[T]</code>.</li>
+                    <li><code>2</code> ➔ <strong>Logic Calculator:</strong> Processes equations, arrays, and algorithms <code>[M]</code> or <code>[C]</code>.</li>
+                    <li><code>3</code> ➔ <strong>Vision Encoder:</strong> Processes pixel maps, colors, and coordinates <code>[V]</code>.</li>
+                    <li><code>4</code> ➔ <strong>Audio Spectrogram:</strong> Processes waves, frequencies, and decibels <code>[A]</code>.</li>
+                    <li><code>5</code> ➔ <strong>Codegen Compiler:</strong> Processes syntax, compilation, and scripting <code>[C]</code>.</li>
+                    <li><code>6</code> ➔ <strong>Translation Polyglot:</strong> Processes language conversions and idioms <code>[T]</code>.</li>
+                    <li><code>7</code> ➔ <strong>Generalist:</strong> Universal fallback. Slowly processes anything but limits speed.</li>
+                    <li><code>8</code> ➔ <strong>Hallucinator:</strong> Instant wildcard. Processes immediately, but spikes output error rate!</li>
+                </ul>
+
+                <h4>💥 OPERATIONAL HAZARDS:</h4>
+                <ul>
+                    <li><strong>Capacity Limits:</strong> Each expert has a queue limit. If you send too many tokens to one expert, it overflows and **drops subsequent inputs**!</li>
+                    <li><strong>Routing Noise (Temp):</strong> High temperatures deflect tokens randomly away from your selected experts. Keep routing noise low for precise execution.</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeHowToModal()">ENGAGE ROUTER</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Score/Endgame Modal -->
+    <div id="modal-share" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-share-title">
+        <div class="modal-content">
+            <h3 id="modal-share-title" class="modal-title">📊 ROUTING PERFORMANCE SCORECARD</h3>
+            <div class="modal-body">
+                <p id="share-status-message">Evaluating network routing metrics...</p>
+                <div id="share-preview" class="share-preview-box">
+                    <!-- Generated share stats -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="closeShareModal()">CLOSE</button>
+                <button id="btn-copy-clipboard" class="btn btn-primary" onclick="copyScoreClipboard()">📋 COPY SCORECARD</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script -->
+    <script src="app.js"></script>
+</body>
+</html>
