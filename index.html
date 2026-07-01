@@ -9,11 +9,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #030712;
-            --text: #f3f4f6;
+            --bg: #050811;
+            --text-primary: #f3f4f6;
+            --text-muted: #9ca3af;
             --cyan: #00f0ff;
+            --cyan-glow: rgba(0, 240, 255, 0.15);
             --border: rgba(255, 255, 255, 0.08);
-            --panel: rgba(17, 24, 39, 0.5);
+            --panel: rgba(13, 20, 38, 0.6);
             --font-ui: 'Outfit', sans-serif;
             --font-mono: 'Share Tech Mono', monospace;
         }
@@ -24,129 +26,183 @@
         }
         body {
             background-color: var(--bg);
-            color: var(--text);
+            color: var(--text-primary);
             font-family: var(--font-ui);
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(0, 240, 255, 0.04) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(0, 255, 102, 0.04) 0%, transparent 40%);
+                radial-gradient(circle at 15% 15%, rgba(0, 240, 255, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(0, 255, 102, 0.03) 0%, transparent 40%);
             background-attachment: fixed;
+            overflow: hidden;
+            padding: 1rem;
         }
-        .container {
-            max-width: 800px;
-            width: 90%;
+        .console-frame {
+            background: rgba(8, 12, 24, 0.7);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            max-width: 760px;
+            width: 100%;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.01);
+            position: relative;
+        }
+        /* CRT style scanlines on the frame */
+        .console-frame::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.12) 50%);
+            background-size: 100% 4px;
+            z-index: 10;
+            pointer-events: none;
+            border-radius: 16px;
+            opacity: 0.4;
+        }
+        header {
             text-align: center;
-            padding: 2rem 0;
+            margin-bottom: 1.5rem;
         }
         h1 {
-            font-size: 2.2rem;
+            font-size: 1.4rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            background: linear-gradient(135deg, #fff 30%, var(--cyan) 100%);
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #ffffff 40%, var(--cyan) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 0.5rem;
             font-weight: 800;
         }
         p.subtitle {
             font-family: var(--font-mono);
             color: var(--cyan);
-            font-size: 0.85rem;
-            margin-bottom: 3rem;
-            letter-spacing: 1.5px;
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            margin-top: 0.25rem;
+            text-shadow: 0 0 5px var(--cyan-glow);
         }
         .grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            gap: 1rem;
         }
-        @media (max-width: 600px) {
-            .grid { grid-template-columns: 1fr; }
+        @media (max-width: 580px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            body {
+                overflow: auto;
+            }
         }
         .card {
             background: var(--panel);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.8rem;
-            text-align: left;
-            backdrop-filter: blur(12px);
-            transition: border-color 0.3s, transform 0.2s, box-shadow 0.3s;
-            cursor: pointer;
+            border-radius: 10px;
+            padding: 1.2rem;
             text-decoration: none;
             color: inherit;
             display: flex;
             flex-direction: column;
+            position: relative;
+            transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s;
+            cursor: pointer;
         }
         .card:hover {
             border-color: var(--cyan);
             transform: translateY(-2px);
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.08);
         }
         .card.coming-soon {
-            opacity: 0.5;
+            opacity: 0.45;
             cursor: not-allowed;
+            background: rgba(10, 15, 30, 0.3);
         }
         .card.coming-soon:hover {
             border-color: var(--border);
             transform: none;
             box-shadow: none;
         }
-        .card h2 {
-            font-size: 1.25rem;
-            margin: 0 0 0.6rem 0;
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        .card-index {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
             color: var(--cyan);
+            opacity: 0.6;
+        }
+        .card h2 {
+            font-size: 1rem;
+            color: var(--text-primary);
             text-transform: uppercase;
             font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+        .card:hover h2 {
+            color: var(--cyan);
+        }
+        .card.coming-soon:hover h2 {
+            color: var(--text-primary);
         }
         .card p {
-            font-size: 0.88rem;
-            color: #9ca3af;
-            line-height: 1.5;
-            margin: 0 0 1.8rem 0;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            line-height: 1.45;
+            margin-bottom: 1.2rem;
             flex-grow: 1;
         }
         .badge {
             display: inline-block;
             font-family: var(--font-mono);
-            font-size: 0.68rem;
-            padding: 3px 8px;
+            font-size: 0.62rem;
+            padding: 2px 6px;
             border-radius: 4px;
             font-weight: bold;
-            align-self: flex-start;
+            letter-spacing: 0.5px;
         }
         .badge.active {
-            background: rgba(0, 255, 102, 0.08);
+            background: rgba(0, 255, 102, 0.06);
             color: #00ff66;
             border: 1px solid rgba(0, 255, 102, 0.2);
+            box-shadow: 0 0 8px rgba(0, 255, 102, 0.05);
         }
         .badge.offline {
-            background: rgba(255, 255, 255, 0.03);
-            color: #9ca3af;
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--text-muted);
             border: 1px solid var(--border);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>UnitBuilds CC Playgrounds</h1>
-        <p class="subtitle">INTERACTIVE DEVELOPER EXPERIENCES</p>
+    <div class="console-frame">
+        <header>
+            <h1>UnitBuilds CC Playgrounds</h1>
+            <p class="subtitle">INTERACTIVE SYSTEM SIMULATORS</p>
+        </header>
         
         <div class="grid">
             <a href="/crossword/" class="card">
-                <h2>LLMs are Demented: Crossword</h2>
-                <p>Solve a standard crossword while managing real-time hardware constraints of LLM inference: context windows, cache retention, and temperature-based mutations.</p>
-                <span class="badge active">ACTIVE PLAYGROUND</span>
+                <div class="card-header">
+                    <h2>LLMs Are Demented</h2>
+                    <span class="card-index">SYS_01</span>
+                </div>
+                <p>Solve a standard crossword puzzle while battling simulated transformer memory constraints: context evictions and temperature drift.</p>
+                <span class="badge active">ONLINE [RUN_SIM]</span>
             </a>
             
             <div class="card coming-soon">
-                <h2>The Gating Crisis: MoE Router</h2>
-                <p>Route multi-modal token streams to specialized experts under load in a sparse Mixture of Experts (MoE) simulator. Launching tomorrow.</p>
-                <span class="badge offline">OFFLINE (COMING SOON)</span>
+                <div class="card-header">
+                    <h2>The Gating Crisis</h2>
+                    <span class="card-index">SYS_02</span>
+                </div>
+                <p>Route multi-modal token streams to specialized expert models in a live gating network load-balancer. Launching tomorrow.</p>
+                <span class="badge offline">OFFLINE [STBY]</span>
             </div>
         </div>
     </div>
