@@ -59,6 +59,7 @@ let quadrantTimers = [null, 45, 45, 45, 45];
 let gameLoopInterval = null;
 let inferenceAutoTriggered = false;
 let pasteDetected = false;
+let blindModeEnabled = false;
 
 // Initialize Audio Context (lazily instantiated on interaction)
 let audioCtx = null;
@@ -200,6 +201,9 @@ function setupGame() {
     inferenceAutoTriggered = false;
     pasteDetected = false;
     
+    const toggleBlind = document.getElementById('toggle-blind-mode');
+    blindModeEnabled = toggleBlind ? toggleBlind.checked : false;
+    
     // If the welcome modal is not active/open (e.g. during a hard reset), start the clock immediately
     const welcomeModal = document.getElementById('modal-howto');
     if (welcomeModal && !welcomeModal.classList.contains('active')) {
@@ -236,6 +240,7 @@ function setupGame() {
                     c: currC,
                     correctLetter: letter,
                     currentValue: "",
+                    userValue: "",
                     isMutated: false,
                     originalMutationLetter: "",
                     number: null,
@@ -261,7 +266,11 @@ function setupGame() {
     
     logToTerminal("Forem liquid embed interface initialized.", "system");
     logToTerminal(`Hyperparameters: CW=${contextWindowLimit}, CacheTime=${cacheRetentionTime}s, Temp=${temperature.toFixed(1)}`, "system");
-    logToTerminal("Awaiting developer neural inputs...", "info");
+    if (blindModeEnabled) {
+        logToTerminal("[WARNING] Blind Mode active. Operational telemetry suppressed.", "warn");
+    } else {
+        logToTerminal("Awaiting developer neural inputs...", "info");
+    }
     
     // Focus first crossword cell (Row 0, Col 1 - WEIGHTS)
     selectCell(0, 1);
@@ -290,6 +299,10 @@ function renderBoard() {
                 cellEl.dataset.row = r;
                 cellEl.dataset.col = c;
                 
+                if (!blindModeEnabled && cellState.isMutated) {
+                    cellEl.classList.add('mutated');
+                }
+                
                 // Add clue starting number
                 if (cellState.number) {
                     const numEl = document.createElement('span');
@@ -301,7 +314,7 @@ function renderBoard() {
                 // Add letter span
                 const letterEl = document.createElement('span');
                 letterEl.className = "cell-letter";
-                letterEl.innerText = cellState.currentValue;
+                letterEl.innerText = blindModeEnabled ? cellState.userValue : cellState.currentValue;
                 cellEl.appendChild(letterEl);
                 
                 // Click handler
@@ -412,16 +425,21 @@ function gameTickLoop() {
                 evictQuadrant(q);
             } else {
                 // Update UI text
-                if (labelEl) labelEl.innerText = `Q${q} CACHE: ${quadrantTimers[q]}s`;
-                
-                // Update Warning Classes
-                if (sectorEl) {
-                    if (quadrantTimers[q] <= 3) {
-                        sectorEl.className = "quadrant-sector danger";
-                    } else if (quadrantTimers[q] <= 6) {
-                        sectorEl.className = "quadrant-sector warning";
-                    } else {
-                        sectorEl.className = "quadrant-sector";
+                if (blindModeEnabled) {
+                    if (labelEl) labelEl.innerText = `Q${q} CACHE: IDLE`;
+                    if (sectorEl) sectorEl.className = "quadrant-sector";
+                } else {
+                    if (labelEl) labelEl.innerText = `Q${q} CACHE: ${quadrantTimers[q]}s`;
+                    
+                    // Update Warning Classes
+                    if (sectorEl) {
+                        if (quadrantTimers[q] <= 3) {
+                            sectorEl.className = "quadrant-sector danger";
+                        } else if (quadrantTimers[q] <= 6) {
+                            sectorEl.className = "quadrant-sector warning";
+                        } else {
+                            sectorEl.className = "quadrant-sector";
+                        }
                     }
                 }
             }
@@ -473,8 +491,10 @@ function checkQuadrantLetters(q) {
 
 // Perform KV-cache eviction on a quadrant
 function evictQuadrant(q) {
-    logToTerminal(`[ALERT] KV-Cache Eviction! Quadrant ${q} context expired.`, "error");
-    playEvictionSound();
+    if (!blindModeEnabled) {
+        logToTerminal(`[ALERT] KV-Cache Eviction! Quadrant ${q} context expired.`, "error");
+        playEvictionSound();
+    }
     
     // Wipe quadrant letters
     for (let r = 0; r < ROWS; r++) {
@@ -489,25 +509,29 @@ function evictQuadrant(q) {
                     // Remove from context queue
                     contextQueue = contextQueue.filter(item => !(item.r === r && item.c === c));
                     
-                    // Update cell DOM
-                    const cellEl = document.getElementById(`cell-${r}-${c}`);
-                    if (cellEl) {
-                        cellEl.classList.remove('mutated');
-                        const letterSpan = cellEl.querySelector('.cell-letter');
-                        if (letterSpan) letterSpan.innerText = "";
+                    // Update cell DOM (only if not blind)
+                    if (!blindModeEnabled) {
+                        const cellEl = document.getElementById(`cell-${r}-${c}`);
+                        if (cellEl) {
+                            cellEl.classList.remove('mutated');
+                            const letterSpan = cellEl.querySelector('.cell-letter');
+                            if (letterSpan) letterSpan.innerText = "";
+                        }
                     }
                 }
             }
         }
     }
     
-    // Flash quadrant overlay red
-    const sectorEl = document.getElementById(`quadrant-${q}`);
-    if (sectorEl) {
-        sectorEl.className = "quadrant-sector evicting";
-        setTimeout(() => {
-            sectorEl.className = "quadrant-sector";
-        }, 500);
+    // Flash quadrant overlay red (only if not blind)
+    if (!blindModeEnabled) {
+        const sectorEl = document.getElementById(`quadrant-${q}`);
+        if (sectorEl) {
+            sectorEl.className = "quadrant-sector evicting";
+            setTimeout(() => {
+                sectorEl.className = "quadrant-sector";
+            }, 500);
+        }
     }
     
     quadrantTimers[q] = cacheRetentionTime;
@@ -517,7 +541,7 @@ function evictQuadrant(q) {
 
 // Spontaneous Hallucination
 function spontaneousMutation() {
-    // Find candidate cells: non-empty, filled, and not already mutated
+    // Find candidates: non-empty, filled, and not already mutated
     let candidates = [];
     for (let r = 0; r < ROWS; r++) {
         for (let c = 0; c < COLS; c++) {
@@ -554,22 +578,26 @@ function mutateCell(r, c, spontaneous = false) {
     
     cell.currentValue = mutatedChar;
     
-    // Update DOM
-    const cellEl = document.getElementById(`cell-${r}-${c}`);
-    if (cellEl) {
-        cellEl.classList.add('mutated');
-        const letterSpan = cellEl.querySelector('.cell-letter');
-        if (letterSpan) letterSpan.innerText = mutatedChar;
+    // Update DOM (only if not blind)
+    if (!blindModeEnabled) {
+        const cellEl = document.getElementById(`cell-${r}-${c}`);
+        if (cellEl) {
+            cellEl.classList.add('mutated');
+            const letterSpan = cellEl.querySelector('.cell-letter');
+            if (letterSpan) letterSpan.innerText = mutatedChar;
+        }
     }
     
-    if (spontaneous) {
-        logToTerminal(`[ALERT] Spontaneous Hallucination! Noise mutated cell (R${r}, C${c}) to '${mutatedChar}'.`, "warn");
-    } else {
-        logToTerminal(`[WARN] Context overflow! Oldest cell (R${r}, C${c}) evicted and mutated to '${mutatedChar}'.`, "warn");
+    if (!blindModeEnabled) {
+        if (spontaneous) {
+            logToTerminal(`[ALERT] Spontaneous Hallucination! Noise mutated cell (R${r}, C${c}) to '${mutatedChar}'.`, "warn");
+        } else {
+            logToTerminal(`[WARN] Context overflow! Oldest cell (R${r}, C${c}) evicted and mutated to '${mutatedChar}'.`, "warn");
+        }
+        playWarningSound();
     }
     
     mutationsCount++;
-    playWarningSound();
     updateStats();
 }
 
@@ -836,7 +864,7 @@ function updateContextVis() {
             if (cell) {
                 const cellEl = document.getElementById(`cell-${r}-${c}`);
                 if (cellEl) {
-                    if (cell.currentValue === "") {
+                    if (blindModeEnabled || cell.currentValue === "") {
                         cellEl.classList.remove('out-of-context');
                     } else {
                         const inContext = inContextSet.has(`${r},${c}`);
@@ -881,6 +909,23 @@ function resetGame() {
 // Verify Board & Trigger End modal
 function runInference() {
     initAudio();
+    
+    // Freeze the game loop state immediately
+    if (gameLoopInterval) {
+        clearInterval(gameLoopInterval);
+        gameLoopInterval = null;
+    }
+    
+    if (blindModeEnabled) {
+        blindModeEnabled = false;
+        const toggleEl = document.getElementById('toggle-blind-mode');
+        if (toggleEl) toggleEl.checked = false;
+        
+        logToTerminal("[CRITICAL] Blind Mode deactivated. Unmasking actual compile state...", "error");
+        renderBoard();
+        updateContextVis();
+    }
+    
     updateStats();
     
     const correctWords = countCorrectWords();
@@ -1170,6 +1215,7 @@ function handlePasteText(text) {
                 keystrokesCount++;
                 
                 cell.currentValue = char;
+                cell.userValue = char;
                 cell.isMutated = false;
                 cell.originalMutationLetter = "";
                 
@@ -1281,6 +1327,22 @@ function clearActivePresets() {
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Initial game setup
     setupGame();
+    
+    // Blind Mode toggle binding
+    const toggleBlind = document.getElementById('toggle-blind-mode');
+    if (toggleBlind) {
+        toggleBlind.addEventListener('change', (e) => {
+            blindModeEnabled = e.target.checked;
+            playClickSound();
+            if (blindModeEnabled) {
+                logToTerminal("[SYSTEM] Blind Mode activated. Telemetry channels suppressed.", "warn");
+            } else {
+                logToTerminal("[SYSTEM] Blind Mode deactivated. Telemetry restored.", "info");
+            }
+            renderBoard();
+            updateContextVis();
+        });
+    }
     
     // Open intro modal
     setTimeout(() => {
