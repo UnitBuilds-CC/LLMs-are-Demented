@@ -953,7 +953,7 @@ function runInference() {
 └─ Cloud API: 150.00 tokens/sec (${cloudComparison})
 
 "I will never yell at my chat client again."
-🚀 Play the Simulation Here: [Your Dev.to Post URL]`;
+🚀 Play the Simulation Here: https://dev.to/unitbuilds_cc/llms-are-demented-5ff2`;
 
     const previewBox = document.getElementById('share-preview');
     if (previewBox) {
