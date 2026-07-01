@@ -166,13 +166,13 @@ main {
 .parameter-control {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 1.1rem;
 }
 
 .slider-group {
     display: flex;
     flex-direction: column;
-    gap: 0.1rem;
+    gap: 0.35rem;
 }
 
 .slider-info {
