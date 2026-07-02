@@ -1,58 +1,57 @@
-# 🧩 LLMs Are Demented: The Crossword 🧠
-> *Mechanical Sympathy Edition v1.0.0*
+# 📟 The Gating Crisis: Sparse MoE Router Simulator 🧠⚡
+> *Part of the UnitBuilds CC Playgrounds Suite*
 
-[![Model Accuracy: 100%](https://img.shields.io/badge/Model%20Accuracy-100%25-brightgreen.svg)](#)
-[![Temperature: Chaos](https://img.shields.io/badge/Temperature-Chaos%20(T%20%3E%3D%201.3)-orange.svg)](#)
+[![Architecture: Sparse MoE](https://img.shields.io/badge/Architecture-Sparse%20MoE%20(Top--2)-brightgreen.svg)](#)
 [![Deployment: Cloud%20Run](https://img.shields.io/badge/Deployment-Cloud%20Run-blue.svg)](#)
 
-Welcome, neural engineer. You have been tasked with solving a standard, technical crossword puzzle. 
+Welcome, neural engineer. You have been put in charge of the **Gating Network (Router)** for a running Mixture of Experts (MoE) Large Language Model.
 
-There's just one catch: **You are running this crossword directly inside the hardware constraints of a running Large Language Model (LLM).** If you type too slowly, your KV-Cache decays and evaporates. If you type too much, your Context Window overflows and older letters drift into hallucinations. If your Temperature is too high, cells erupt into symbolic garbage.
+Your task is to route incoming multi-modal token streams (`[T] Text`, `[M] Math`, `[V] Vision`, `[A] Audio`, and `[C] Code`) to specialized Feed-Forward Network (FFN) experts in real-time. Since this is a **Top-2 Routing** network, you must dispatch every token to exactly **two experts** before it reaches the eviction threshold.
 
-An interactive, educational game designed to teach the general public *why* LLMs hallucinate, decay, and make mistakes—so they stop getting so frustrated at their chat clients and gain some **Mechanical Sympathy** for the machine.
-
----
-
-## ⚙️ The Mechanics of Frustration (How to Play)
-
-As you solve the 9 intersecting technical clues on the board, the model's runtime architecture will actively fight your progress:
-
-*   **💾 Context Window ($C_{\text{tokens}}$):** Your active memory queue. The model only tracks your last `N` cell edits. If you fill in more than `N` cells, the oldest letters you typed fall out of context and start **organically decaying** into mutated lookup characters.
-*   **⏰ KV-Cache Expiry ($\tau$):** The crossword board is split into 4 distinct quadrants (Q1-Q4). If a quadrant's cache isn't refreshed by editing one of its cells before the timer hits 0s, **the entire quadrant's cache evicts, wiping those cells blank**! Edit a cell in a quadrant to refresh its cache.
-*   **🔥 Temperature ($T$):** Controls the nature of mutations:
-    *   *Low Temperature ($T \le 0.8$):* The model is predictable but suffers from visual/semantic drift (e.g. `A` ➔ `4`, `E` ➔ `3`).
-    *   *High Temperature ($T \ge 1.3$):* Pure symbolic entropy (e.g. `%`, `🤖`, `💾` corrupting cells).
-*   **🔌 Time to First Token (TTFT) & TPS:** Your latency is actively tracked. Speedrun the crossword to maximize your Tokens Per Second (TPS)!
+If you route tokens incorrectly, the model's output quality degrades into **perplexity collapse**. If you overload any individual expert beyond its queue limit, the system experiences **Capacity Drops** (loss of data).
 
 ---
 
-## 🛠️ The Hardware Tiers (Difficulty Presets)
+## 🕹️ Game Mechanics (How to Play)
 
-Choose your inference endpoint before starting the run:
-
-1.  **🏢 Enterprise API (Over-provisioned) - *Easy*:**
-    *   $C_{\text{tokens}} = 64$ | $\tau = 90\text{s}$ | $T = 0.2$
-    *   *Generous memory, slow decay, predictable weights. Perfect for debugging.*
-2.  **💻 Local Llama (Quantized 7B) - *Medium*:**
-    *   $C_{\text{tokens}} = 32$ | $\tau = 45\text{s}$ | $T = 0.7$
-    *   *The standard developer experience. Letters will start to drift if you linger.*
-3.  **🍞 Smart Toaster (Edge Inference) - *Hard*:**
-    *   $C_{\text{tokens}} = 16$ | $\tau = 15\text{s}$ | $T = 1.4$
-    *   *Pure edge-computing chaos. Evictions happen in seconds, mutations are symbolic.*
+*   **⌨️ Hotkey Routing:** Use numbers `1` to `8` (or `1` to `4` in simplified mode) to select FFN experts.
+*   **🟡 Active Routing Runway:** You can only route a token while it falls between the **yellow dashed line (Routing Gateway Active)** and the **red dashed line (Gating Threshold)**. Keys pressed outside this zone will not register.
+*   **⚙️ Adjustable Runway Size:** Drag the slider to adjust the height of the active zone. Shorter runways mimic resource-constrained edge hardware, giving you less time to process inputs.
+*   **🚀 Separated Pacing Controls:** Configure the **Token Spawn Interval** and **Token Movement Speed** independently to test high-density throughput without causing visual overlapping.
+*   **🕶️ Mask Routing Hints (Hard Mode):** Toggle the hint switch to hide the recommended key badges on tokens and suppress the glowing outlines on FFN cards, forcing you to route based entirely on expert specialization knowledge.
+*   **📊 Cognitive Latency Diagnostics:** The traditional throughput metric is replaced with **Routing Latency** (in milliseconds), measuring your average cognitive dispatch speed after a token crosses the active line.
 
 ---
 
-## 🚀 Help Guide
+## 🛠️ Hardware Tiers (Difficulty Presets)
 
-*   **🧠 View Weights:** You can click the `🧠 VIEW WEIGHTS` button in the header to query the weights database and see all the crossword answers as declarative statements. 
-*   **🔒 Context Lock:** When the database dump is open, all keyboard input is blocked. You must read, memorize, close the dump (context-switch), and write it down.
+Choose your gating hardware configuration before starting the run:
+
+1.  **🏢 DataCenter (FP8 Over-provisioned) - *Easy*:**
+    *   *Spawn Interval:* `5.0s` | *Movement Speed:* `1.2x` | *Noise (Temp):* `0.0` | *Expert Capacity:* `8`
+    *   *Clean signals, zero deflections, and wide queues. Great for training.*
+2.  **💻 Local 8x7B (Quantized) - *Medium*:**
+    *   *Spawn Interval:* `6.8s` | *Movement Speed:* `1.0x` | *Noise (Temp):* `0.1` | *Expert Capacity:* `5`
+    *   *Standard development setup. Slight routing temperature noise may deflect inputs.*
+3.  **🍞 Edge Toaster (Low-power ASIC) - *Hard*:**
+    *   *Spawn Interval:* `4.2s` | *Movement Speed:* `1.4x` | *Noise (Temp):* `0.4` | *Expert Capacity:* `3`
+    *   *High noise, tiny queues, and fast descent speeds. Extreme load balancing required.*
 
 ---
 
-## 📦 Local Setup & Docker Deployment
+## 📂 Repository Structure
+
+This repository serves as a multi-game portal:
+*   `/` (Root): A retro-dashboard terminal landing page linking to the available playgrounds.
+*   `gating-crisis/`: The Mixture of Experts router simulator.
+*   `crossword/`: **LLMs Are Demented** — A technical crossword puzzle simulator where you battle KV-Cache decay, Context Window overflows, and Temperature-based token mutations.
+
+---
+
+## 📦 Local Setup & Deployment
 
 ### 1. Run Locally
-The game is built with pure client-side HTML, CSS, and JS (utilizing a HTML5 Web Audio synthesizer). Spin up any local server in the root directory:
+The suite is built with pure client-side HTML, CSS, and JS (utilizing browser-synthesized 8-bit audio). Spin up any local server in the root directory:
 ```bash
 python -m http.server 8080
 ```
@@ -62,24 +61,25 @@ Then visit `http://localhost:8080`.
 A Dockerfile and Nginx template are included for lightweight production packaging:
 ```bash
 # Build the container
-docker build -t llms-are-demented .
+docker build -t gating-crisis-portal .
 
 # Run the container
-docker run -p 8080:8080 llms-are-demented
+docker run -p 8080:8080 gating-crisis-portal
 ```
 
 ### 3. Deploy to Google Cloud Run
-Easily host the game in the cloud using the Google Cloud CLI:
+Easily host the playground in the cloud using the Google Cloud CLI:
 ```bash
-gcloud run deploy llms-are-demented \
+gcloud run deploy gating-crisis-portal \
     --source . \
     --platform managed \
-    --allow-unauthenticated
+    --allow-unauthenticated \
+    --project=llms-demented-crossword-77
 ```
 
 ---
 
-*Remember: I will never yell at my chat client again.*
+*Remember: The gating network is the gateway to sanity.*
 ```
-guest@forem-node:~$ exit
+gating-router@moe-node:~$ exit
 ```
