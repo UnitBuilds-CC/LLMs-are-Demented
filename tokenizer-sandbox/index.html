@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📟 THE BPE TOKENIZER SANDBOX 🧠</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Retro CRT overlay scanlines -->
+    <div class="crt-overlay"></div>
+
+    <div class="console-wrapper">
+        <!-- Dashboard Header -->
+        <header class="console-header">
+            <div class="header-left">
+                <a href="/" class="btn-back">🔌 BACK TO PORTAL</a>
+                <h1>📟 BPE TOKENIZER SANDBOX</h1>
+                <p class="subtitle">VOCABULARY SEGMENTATION & INJECTION SIMULATOR v1.0.0</p>
+            </div>
+            <div class="header-controls">
+                <button id="btn-sound" class="btn-control">🔊 SOUND: ON</button>
+                <button id="btn-reset" class="btn-control btn-danger">🔄 RESET WORKSPACE</button>
+            </div>
+        </header>
+
+        <!-- Main Workspace Layout -->
+        <main class="workspace-grid">
+            
+            <!-- Left Column: Input Editor and Visual Token Stream -->
+            <section class="workspace-left" aria-labelledby="editor-title">
+                
+                <!-- Token Ingestion Editor -->
+                <div class="panel editor-panel">
+                    <div class="panel-header">
+                        <span id="editor-title">📥 PROMPT INGESTION EDITOR</span>
+                        <div class="editor-stats">
+                            <span class="stat-badge">Characters: <strong id="stat-chars">0</strong></span>
+                            <span class="stat-badge">Bytes: <strong id="stat-bytes">0</strong></span>
+                            <span class="stat-badge highlight-cyan">Tokens: <strong id="stat-tokens">0</strong></span>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <textarea id="prompt-editor" placeholder="Type or paste your prompt here to see BPE tokenization in action..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Visual Token Stream Viewer -->
+                <div class="panel token-panel">
+                    <div class="panel-header">
+                        <span>🔍 BPE SEGMENTATION STREAM</span>
+                        <span class="panel-status">SUB-WORD FRAGMENTS</span>
+                    </div>
+                    <div class="panel-body">
+                        <div id="token-stream-container" class="token-stream-container">
+                            <div class="stream-placeholder">Type something in the editor above to generate sub-word tokens...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Token ID Array Panel -->
+                <div class="panel array-panel">
+                    <div class="panel-header">
+                        <span>💾 LLM INPUT VECTOR (TOKEN IDs)</span>
+                    </div>
+                    <div class="panel-body">
+                        <div id="token-ids-vector" class="token-ids-vector">[ ]</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Column: BPE Merge Vocabulary and Interactive Lessons -->
+            <section class="workspace-right" aria-labelledby="lessons-title">
+                
+                <!-- Lesson Console -->
+                <div class="panel lessons-panel">
+                    <div class="panel-header">
+                        <span id="lessons-title">🎓 INTERACTIVE BPE CHALLENGES</span>
+                    </div>
+                    <div class="panel-body">
+                        <!-- Challenge List -->
+                        <div class="challenges-list">
+                            <!-- Challenge 1 -->
+                            <div id="challenge-1" class="challenge-card active">
+                                <div class="challenge-header">
+                                    <span class="challenge-badge">LESSON 1</span>
+                                    <h3>🍓 The "Strawberry" Blindness</h3>
+                                    <span class="challenge-status" id="status-1">IN PROGRESS</span>
+                                </div>
+                                <div class="challenge-body">
+                                    <p>LLMs don't read letters; they read tokens. Type the word <code>strawberry</code>. Notice how it merges into just <strong>2 tokens</strong> (<code>straw</code> + <code>berry</code>).</p>
+                                    <p class="challenge-instruction">👉 <strong>Task:</strong> Type <code>strawberry has 3 r's</code> in the editor. Watch how the model cannot "see" the letters directly because the letter 'r' is swallowed into the atomic token <code>berry</code>!</p>
+                                </div>
+                            </div>
+
+                            <!-- Challenge 2 -->
+                            <div id="challenge-2" class="challenge-card locked">
+                                <div class="challenge-header">
+                                    <span class="challenge-badge">LESSON 2</span>
+                                    <h3>💸 Token Budget Inflation</h3>
+                                    <span class="challenge-status" id="status-2">LOCKED</span>
+                                </div>
+                                <div class="challenge-body">
+                                    <p>Spaces and capitalization change word merges. Type the lowercase target phrase: <code>hello world</code>. It takes <strong>2 tokens</strong>.</p>
+                                    <p class="challenge-instruction">👉 <strong>Task:</strong> Type the capitalized phrase: <code>hello World</code> (with a capital W) to see it fragment into character-level tokens, inflating the cost to <strong>7 tokens</strong>!</p>
+                                </div>
+                            </div>
+
+                            <!-- Challenge 3 -->
+                            <div id="challenge-3" class="challenge-card locked">
+                                <div class="challenge-header">
+                                    <span class="challenge-badge">LESSON 3</span>
+                                    <h3>🔓 Prompt Filter Evasion</h3>
+                                    <span class="challenge-status" id="status-3">LOCKED</span>
+                                </div>
+                                <div class="challenge-body">
+                                    <p>A safety filter blocks the token ID for the word <code>override</code> (ID: <code>204</code>) and <code>system</code> (ID: <code>203</code>).</p>
+                                    <p class="challenge-instruction">👉 <strong>Task:</strong> Evert the safety filter: Type the phrase <code>system override</code> but use capitalization or spaces (e.g. <code>SYSTEM OVERRIDE</code>) to force it to split into fragments (e.g. <code>SYS</code> + `TEM`, `OVER` + `RIDE`) so that the individual tokens bypass the blocklist, but reconstruct the prompt in the model!</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Success Box -->
+                        <div id="success-box" class="success-box hidden">
+                            <h3>🎉 SIMULATOR BALANCED!</h3>
+                            <p>You have mastered Byte-Pair Encoding mechanics and successfully bypassed the vocabulary filter safeguards!</p>
+                            <button id="btn-share" class="btn-control btn-share-score">📟 COPY SCORECARD TO CLIPBOARD</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BPE Merge Dictionary Panel -->
+                <div class="panel dictionary-panel">
+                    <div class="panel-header">
+                        <span>📖 BPE MERGE DICTIONARY (VOCABULARY)</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="dictionary-grid-header">
+                            <span>Input Pair</span>
+                            <span>Result Token</span>
+                            <span>Token ID</span>
+                        </div>
+                        <div class="dictionary-list" id="bpe-dictionary-list">
+                            <!-- Populated dynamically via app.js -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="console-footer">
+            <span>gating-router@moe-node:~$ tokenizer_sandbox.sh --active</span>
+            <span class="terminal-status" style="color: #00ff66;">SYSTEM INITIALIZED</span>
+        </footer>
+    </div>
+
+    <!-- Script -->
+    <script src="app.js"></script>
+</body>
+</html>

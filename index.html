@@ -86,10 +86,10 @@
         }
         .grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
         }
-        @media (max-width: 580px) {
+        @media (max-width: 700px) {
             .grid {
                 grid-template-columns: 1fr;
             }
@@ -192,7 +192,7 @@
                     <h2>LLMs Are Demented</h2>
                     <span class="card-index">SYS_01</span>
                 </div>
-                <p>Solve a standard crossword puzzle while battling simulated transformer memory constraints: context evictions and temperature drift.</p>
+                <p>Solve a standard crossword puzzle while battling simulated memory evictions and temperature drift.</p>
                 <span class="badge active">ONLINE [RUN_SIM]</span>
             </a>
             
@@ -202,6 +202,15 @@
                     <span class="card-index">SYS_02</span>
                 </div>
                 <p>Route multi-modal token streams to specialized expert models in a live gating network load-balancer.</p>
+                <span class="badge active">ONLINE [RUN_SIM]</span>
+            </a>
+
+            <a href="/tokenizer-sandbox/" class="card">
+                <div class="card-header">
+                    <h2>Tokenizer Sandbox</h2>
+                    <span class="card-index">SYS_03</span>
+                </div>
+                <p>Explore BPE tokenization. Understand character blindness, space inflation, and bypass security filters.</p>
                 <span class="badge active">ONLINE [RUN_SIM]</span>
             </a>
         </div>
