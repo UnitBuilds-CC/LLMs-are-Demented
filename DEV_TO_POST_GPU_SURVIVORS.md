@@ -13,9 +13,9 @@ To teach you how LLMs behave (and fall apart) under load, I built an interactive
 
 ## ⚡ GPU Survivors: Latent Space Hell
 
-{% embed https://llms-are-demented-90043718455.us-central1.run.app/gpu-survivors/ %}
+{% embed https://llms-are-demented-166926259124.us-central1.run.app/gpu-survivors/ %}
 
-{% cta https://llms-are-demented-90043718455.us-central1.run.app/gpu-survivors/ %} Play in Fullscreen Mode (if the embed sizing is tight) {% endcta %}
+{% cta https://llms-are-demented-166926259124.us-central1.run.app/gpu-survivors/ %} Play in Fullscreen Mode (if the embed sizing is tight) {% endcta %}
 
 ---
 
