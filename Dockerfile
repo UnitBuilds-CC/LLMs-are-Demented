@@ -9,6 +9,7 @@ COPY crossword /usr/share/nginx/html/crossword/
 COPY gating-crisis /usr/share/nginx/html/gating-crisis/
 COPY tokenizer-sandbox /usr/share/nginx/html/tokenizer-sandbox/
 COPY gpu-survivors /usr/share/nginx/html/gpu-survivors/
+COPY token-factory /usr/share/nginx/html/token-factory/
 
 # Expose port 8080 (Cloud Run's default port)
 ENV PORT 8080

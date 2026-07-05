@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYS_05 // TOKEN_FACTORY - Inference Pipeline Tycoon</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts for retro terminal monospace and title styling -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Outfit:wght@400;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- CRT SCANLINE SCAN FILTER EFFECT -->
+    <div class="crt-overlay"></div>
+    <div class="scanlines"></div>
+
+    <!-- MAIN DASHBOARD WRAPPER -->
+    <div class="dashboard-wrapper">
+        <!-- TOP NAVIGATION CONTROL HEADER -->
+        <header class="portal-header">
+            <div class="header-left">
+                <a href="../" class="back-link" id="btn-back">◀ PORTAL</a>
+                <span class="system-code">SYS_05 // TOKEN_FACTORY</span>
+            </div>
+            <div class="header-center">
+                <h1 class="glow-text">INFERENCE PIPELINE TYCOON</h1>
+            </div>
+            <div class="header-right">
+                <button id="btn-sound" class="btn-sound-toggle">🔊 AUDIO: ON</button>
+            </div>
+        </header>
+
+        <!-- MAIN SECTION GRID LAYOUT -->
+        <main class="main-content">
+            <!-- LEFT PANEL: SYSTEM TELEMETRY HUD -->
+            <section class="panel left-panel">
+                <div class="panel-header">📟 RUNTIME TELEMETRY</div>
+                
+                <div class="telemetry-grid">
+                    <div class="telemetry-card">
+                        <div class="telemetry-label">THROUGHPUT</div>
+                        <div class="telemetry-value text-cyan" id="txt-tps">0.0 <span class="unit">TPS</span></div>
+                        <div class="telemetry-sub" id="txt-tps-target">Target: 30.0 TPS</div>
+                    </div>
+                    
+                    <div class="telemetry-card">
+                        <div class="telemetry-label">PREFILL LATENCY</div>
+                        <div class="telemetry-value text-magenta" id="txt-ttft">0 <span class="unit">MS</span></div>
+                        <div class="telemetry-sub">Time to First Token</div>
+                    </div>
+                    
+                    <div class="telemetry-card">
+                        <div class="telemetry-label">ACCEPTANCE RATE</div>
+                        <div class="telemetry-value text-yellow" id="txt-acceptance">-- <span class="unit">%</span></div>
+                        <div class="telemetry-sub">Speculative Hits</div>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <div class="section-title">📦 VRAM CACHE ALLOCATION</div>
+                    <div class="vram-progress-wrapper">
+                        <div class="vram-bar-container">
+                            <div class="vram-bar" id="vram-fill"></div>
+                        </div>
+                        <div class="vram-text-row">
+                            <span id="txt-vram-usage">0 MB / 4096 MB</span>
+                            <span id="txt-vram-pct" class="text-cyan">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-section level-details-box">
+                    <div class="section-title" id="lbl-level-title">LEVEL 1 // PREFILL & DECODE</div>
+                    <p class="level-desc" id="txt-level-desc">Route user prompt requests through a prefill engine to compute attention tables, then feed activations to a decode engine to satisfy the throughput target.</p>
+                    <div class="target-parameters">
+                        <div class="param-row">
+                            <span>Target TPS:</span>
+                            <span class="text-cyan font-bold" id="lbl-target-tps">30.0</span>
+                        </div>
+                        <div class="param-row">
+                            <span>Max VRAM:</span>
+                            <span class="text-magenta font-bold" id="lbl-max-vram">4096 MB</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CENTER PANEL: PIPELINE VIEWPORT GRID CANVAS -->
+            <section class="viewport-panel">
+                <div class="viewport-header">
+                    <div class="viewport-title" id="txt-viewport-title">ACTIVE SIMULATION GRID (12x8)</div>
+                    <div class="simulation-state" id="txt-sim-state">STATUS: CONFIGURING</div>
+                </div>
+                <div class="canvas-container">
+                    <canvas id="grid-canvas"></canvas>
+                </div>
+                
+                <!-- SIMULATION CONTROLS BAR -->
+                <div class="simulation-controls">
+                    <button id="btn-simulate" class="btn-action btn-simulate">▶ INITIATE INFERENCE RUN</button>
+                    <button id="btn-stop" class="btn-action btn-stop hidden">■ TERMINATE RUN</button>
+                    
+                    <div class="speed-controls">
+                        <button id="btn-speed-1" class="btn-speed active">1x</button>
+                        <button id="btn-speed-2" class="btn-speed">2x</button>
+                        <button id="btn-speed-3" class="btn-speed">4x</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RIGHT PANEL: COMPONENTS INVENTORY -->
+            <section class="panel right-panel">
+                <div class="panel-header">🧱 COMPONENTS TOOLBOX</div>
+                <div class="components-grid" id="toolbox-container">
+                    <!-- Toolbox items will be dynamically rendered and updated based on level availability -->
+                </div>
+                
+                <!-- ACTIVE COMPONENT DETAILS OVERVIEW -->
+                <div class="component-description-panel">
+                    <div class="desc-title" id="info-name">WIRE CONDUIT</div>
+                    <div class="desc-meta">
+                        <span id="info-type" class="badge">CONDUIT</span>
+                    </div>
+                    <p class="desc-text" id="info-desc">Connects inference engines and routes token data streams from inputs to outputs.</p>
+                    <div class="desc-stats-grid" id="info-stats">
+                        <!-- Stats dynamic rows -->
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- LEVEL SELECT OVERLAY -->
+    <div id="level-select-overlay" class="overlay-panel">
+        <div class="overlay-content max-w-lg">
+            <h2 class="glow-text">INFERENCE TERMINALS</h2>
+            <p class="subtitle font-mono">SELECT HARDWARE DEPLOYMENT PIPELINE</p>
+            
+            <div class="level-cards-container">
+                <div class="level-card" data-level="1" id="card-lvl-1">
+                    <div class="level-card-header">
+                        <span class="level-number">LEVEL 01</span>
+                        <span class="level-badge badge-cyan">INFERENCE BASICS</span>
+                    </div>
+                    <h3>PREFILL & DECODE</h3>
+                    <p>Assemble the standard transformer generating pipeline. Route queries through prefill cores to initialize caches, then decode autoregressively.</p>
+                    <div class="level-requirements">Target: 30 TPS | VRAM: 4096 MB</div>
+                </div>
+                
+                <div class="level-card locked" data-level="2" id="card-lvl-2">
+                    <div class="level-card-header">
+                        <span class="level-number">LEVEL 02</span>
+                        <span class="level-badge badge-yellow">MEMORY CRITICAL</span>
+                    </div>
+                    <h3>KV-CACHE PAGED MEMORY</h3>
+                    <p>Memory allocations are highly fragmented. Direct batching will trigger OOM faults. Build paged KV-cache managers to compress memory allocations.</p>
+                    <div class="level-requirements">Target: 60 TPS | VRAM: 3072 MB</div>
+                </div>
+                
+                <div class="level-card locked" data-level="3" id="card-lvl-3">
+                    <div class="level-card-header">
+                        <span class="level-number">LEVEL 03</span>
+                        <span class="level-badge badge-magenta">SPEED BOUND</span>
+                    </div>
+                    <h3>SPECULATIVE DECODING</h3>
+                    <p>Inference throughput is constrained by bandwidth. Scale pipelines using speculative drafting and parallel verification gates to crack 120 TPS.</p>
+                    <div class="level-requirements">Target: 120 TPS | VRAM: 5120 MB</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OUT OF MEMORY (OOM) CRASH OVERLAY -->
+    <div id="oom-overlay" class="overlay-panel hidden">
+        <div class="overlay-content max-w-md border-red">
+            <h2 class="text-red glow-red font-outfit">!!! CUDA OUT OF MEMORY !!!</h2>
+            <p class="subtitle text-red font-mono">SYSTEM INFERENCE CRASHED</p>
+            
+            <div class="crash-dump-box">
+<pre class="crash-code">
+Traceback (most recent call last):
+  File "serving/engine.py", line 128, in step
+    cache[p_id].allocate(tokens_len)
+RuntimeError: CUDA out of memory. Tried to 
+allocate 512.00 MiB (GPU 0; 4.00 GiB total 
+capacity; 3.82 GiB already allocated).
+Memory fragmented. Virtual allocator error.
+</pre>
+            </div>
+            
+            <p class="crash-hint">Your prefill or decode engines ran out of VRAM due to unpaged KV-cache fragmentation. Connect **Virtual Page Allocators** to optimize VRAM allocations.</p>
+            
+            <button id="btn-oom-retry" class="btn-action btn-danger">REALLOCATE CACHES & RETRY</button>
+        </div>
+    </div>
+
+    <!-- LEVEL VICTORY OVERLAY -->
+    <div id="victory-overlay" class="overlay-panel hidden">
+        <div class="overlay-content max-w-md border-green">
+            <h2 class="text-green glow-green font-outfit">PIPELINE OPTIMIZED</h2>
+            <p class="subtitle text-green font-mono">INFERENCE TARGET SECURED</p>
+            
+            <div class="victory-stats-box">
+                <div class="vic-stat-row">
+                    <span>FINAL THROUGHPUT:</span>
+                    <span class="text-cyan font-bold" id="vic-tps">72.4 TPS</span>
+                </div>
+                <div class="vic-stat-row">
+                    <span>AVERAGE TTFT:</span>
+                    <span class="text-magenta font-bold" id="vic-ttft">42 MS</span>
+                </div>
+                <div class="vic-stat-row">
+                    <span>VRAM PEAK:</span>
+                    <span class="text-yellow" id="vic-vram">2048 MB</span>
+                </div>
+            </div>
+            
+            <div class="victory-buttons">
+                <button id="btn-next-level" class="btn-action btn-success">PROCEED TO NEXT TERMINAL</button>
+                <button id="btn-replay" class="btn-action btn-secondary">REPLAY PIPELINE</button>
+                <button id="btn-portal" class="btn-action btn-danger">EXIT TO PORTAL</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Web Audio Synthesis Audio Engine -->
+    <script src="app.js"></script>
+</body>
+</html>
