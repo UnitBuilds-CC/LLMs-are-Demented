@@ -799,7 +799,7 @@ function updateSimulation() {
 
                 // F. Deliver tokens to Output Port Sink
                 else if (node.type === "sink") {
-                    if (node.inputBuffer.length > 0) {
+                    while (node.inputBuffer.length > 0) {
                         const packet = node.inputBuffer.shift();
                         if (packet.type === "token") {
                             totalTokensDelivered++;
