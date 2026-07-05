@@ -177,6 +177,7 @@ let speculativeAcceptance = 0;
 let totalTokensDelivered = 0;
 let totalRequestsProcessed = 0;
 let totalLatencyAccumulated = 0;
+let deliveryTicks = [];
 
 let speculativeDraftedCount = 0;
 let speculativeAcceptedCount = 0;
@@ -285,6 +286,7 @@ function loadLevel(lvlId) {
     totalTokensDelivered = 0;
     totalRequestsProcessed = 0;
     totalLatencyAccumulated = 0;
+    deliveryTicks = [];
     speculativeDraftedCount = 0;
     speculativeAcceptedCount = 0;
     gameTime = 0;
@@ -391,6 +393,7 @@ function startSimulation() {
     totalTokensDelivered = 0;
     totalRequestsProcessed = 0;
     totalLatencyAccumulated = 0;
+    deliveryTicks = [];
     speculativeDraftedCount = 0;
     speculativeAcceptedCount = 0;
     tps = 0;
@@ -784,6 +787,7 @@ function updateSimulation() {
                         const packet = node.inputBuffer.shift();
                         if (packet.type === "token") {
                             totalTokensDelivered++;
+                            deliveryTicks.push(gameTime);
                             playBleep(1000, 0.02, "sine", 0.03); // Pop click
                             
                             // Spawn successful delivery tiny particles
@@ -804,8 +808,11 @@ function updateSimulation() {
             }
         }
 
-        // Calculate continuous throughput (TPS)
-        tps = (totalTokensDelivered / (gameTime / 60)); // Scaled by frames
+        // Calculate rolling throughput (TPS) over last 5 seconds (300 frames)
+        while (deliveryTicks.length > 0 && deliveryTicks[0] < gameTime - 300) {
+            deliveryTicks.shift();
+        }
+        tps = deliveryTicks.length / 5;
         
         // 5. Check for VRAM CUDA OOM Limits
         if (vramUsage > maxVramLimit) {
