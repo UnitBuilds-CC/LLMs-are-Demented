@@ -630,8 +630,9 @@ body {
 }
 
 .level-card.locked {
-    opacity: 0.25;
-    pointer-events: none;
+    opacity: 0.5;
+    pointer-events: auto;
+    cursor: pointer;
     border-style: dashed;
 }
 
