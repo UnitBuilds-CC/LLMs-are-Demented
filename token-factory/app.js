@@ -618,7 +618,7 @@ function updateSimulation() {
                         const packet = node.inputBuffer.shift();
                         if (packet.type === "activation") {
                             node.activeRequests.push({
-                                tokensToGen: Math.floor(15 + Math.random() * 25), // Generate 15-40 tokens
+                                tokensToGen: Math.floor(activeLevel.promptSize * 1.5), // Scale generation with prompt size
                                 generated: 0,
                                 startTick: packet.data.startTick
                             });
