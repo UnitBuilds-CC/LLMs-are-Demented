@@ -384,10 +384,28 @@ function updateDescriptionPanel(key) {
 function startSimulation() {
     initAudio();
     running = true;
-    document.getElementById('btn-simulate').classList.add('hidden');
-    document.getElementById('btn-stop').classList.remove('hidden');
-    document.getElementById('txt-sim-state').innerText = "STATUS: RUNNING";
-    document.getElementById('txt-sim-state').className = "simulation-state text-green";
+    
+    // Cleanly reset runtime counters on each new run
+    gameTime = 0;
+    spawnTimer = 0;
+    totalTokensDelivered = 0;
+    totalRequestsProcessed = 0;
+    totalLatencyAccumulated = 0;
+    speculativeDraftedCount = 0;
+    speculativeAcceptedCount = 0;
+    tps = 0;
+    ttft = 0;
+    speculativeAcceptance = 0;
+
+    const btnSimulate = document.getElementById('btn-simulate');
+    if (btnSimulate) btnSimulate.classList.add('hidden');
+    const btnStop = document.getElementById('btn-stop');
+    if (btnStop) btnStop.classList.remove('hidden');
+    const simState = document.getElementById('txt-sim-state');
+    if (simState) {
+        simState.innerText = "STATUS: RUNNING";
+        simState.className = "simulation-state text-green";
+    }
     
     // Clear dynamic runtime particles
     packets = [];
