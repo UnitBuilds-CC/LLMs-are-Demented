@@ -25,6 +25,7 @@
                 <h1 class="glow-text">INFERENCE PIPELINE TYCOON</h1>
             </div>
             <div class="header-right">
+                <button id="btn-guide" class="btn-sound-toggle" style="margin-right: 8px;">❓ ARCHITECTURE GUIDE</button>
                 <button id="btn-sound" class="btn-sound-toggle">🔊 AUDIO: ON</button>
             </div>
         </header>
@@ -219,6 +220,71 @@ Memory fragmented. Virtual allocator error.
                 <button id="btn-replay" class="btn-action btn-secondary">REPLAY PIPELINE</button>
                 <button id="btn-portal" class="btn-action btn-danger">EXIT TO PORTAL</button>
             </div>
+        </div>
+    </div>
+
+    <!-- ARCHITECTURE GUIDE / HELP OVERLAY -->
+    <div id="guide-overlay" class="overlay-panel hidden">
+        <div class="overlay-content max-w-lg border-cyan">
+            <h2 class="glow-text text-cyan">📖 PIPELINE ARCHITECTURE GUIDE</h2>
+            <p class="subtitle font-mono">LEARN HOW TO ARRANGE TRANSFORMER CORES</p>
+
+            <div class="guide-tabs">
+                <button class="tab-btn active" data-tab="tab-controls">🎮 CONTROLS & HOW-TO</button>
+                <button class="tab-btn" data-tab="tab-lvl1">⚡ LEVEL 1 GUIDE</button>
+                <button class="tab-btn" data-tab="tab-lvl2">🔋 LEVEL 2 GUIDE</button>
+                <button class="tab-btn" data-tab="tab-lvl3">🚀 LEVEL 3 GUIDE</button>
+            </div>
+
+            <div class="tab-content active" id="tab-controls">
+                <div class="guide-body">
+                    <p class="font-bold text-cyan">Build Your Infrastructure:</p>
+                    <ul class="guide-list">
+                        <li><strong>Place components:</strong> Left-click any item in the right-hand Component Toolbox, then left-click empty cells on the grid to build.</li>
+                        <li><strong>Rotate components:</strong> Left-click already placed Wires, Inputs, or Sinks on the grid to rotate their direction.</li>
+                        <li><strong>Delete components:</strong> Right-click any placed item on the grid to delete it (Source and Sinks are locked).</li>
+                    </ul>
+                    <p class="font-bold text-magenta" style="margin-top: 10px;">The Pipeline Flow:</p>
+                    <p class="desc-text">Data packets flow from green Input Source ports along Wire Conduits, through computation Engines, and out the blue Output Sink ports. A running stream of tokens generates Throughput (TPS). If your engines construct an unstable loop or memory fragments, VRAM will overload triggering a CUDA OOM crash!</p>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-lvl1">
+                <div class="guide-body">
+                    <p class="font-bold text-cyan">Goal: Assemble Basic Transformer pipeline (30 TPS target)</p>
+                    <p class="desc-text">To generate next-tokens, prompts must complete two distinct calculation steps:</p>
+                    <ul class="guide-list">
+                        <li><strong>Step 1 (Prefill):</strong> Processing prompt tokens and building attention cache matrices. Connect the green Input Queue to the input of a <span class="text-magenta">Prefill Core</span>.</li>
+                        <li><strong>Step 2 (Decode):</strong> Autoregressive sequence prediction. Link the output of your <span class="text-magenta">Prefill Core</span> to the input of a <span class="text-cyan">Decode Core</span> using wires.</li>
+                        <li><strong>Step 3 (Sink):</strong> Connect the output of the <span class="text-cyan">Decode Core</span> to the blue SINK port using wire conduits. Ensure all wires align in direction!</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-lvl2">
+                <div class="guide-body">
+                    <p class="font-bold text-cyan">Goal: Manage memory fragmentation under load (60 TPS target)</p>
+                    <p class="desc-text">In real serving configurations, prompt sizes vary, causing severe cache VRAM fragmentation. When multiple streams execute in parallel, VRAM usage will exceed the 3072 MB threshold, triggering a CUDA OOM crash.</p>
+                    <ul class="guide-list">
+                        <li><strong>The Solution (vLLM Paging):</strong> Place <span class="text-yellow">Page Allocators</span> adjacent to your Prefill and Decode cores.</li>
+                        <li><strong>Proximity effect:</strong> Page allocators do not need wires—just place them immediately touching (sharing a boundary with) your Prefill or Decode Cores. This compresses memory footprint by <strong>40%</strong> per core!</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-lvl3">
+                <div class="guide-body">
+                    <p class="font-bold text-cyan">Goal: Boost speed using speculative validation (120 TPS target)</p>
+                    <p class="desc-text">Autoregressive decoding is bound by GPU bandwidth. To satisfy the massive 120 TPS client quota, single token generation is too slow.</p>
+                    <ul class="guide-list">
+                        <li><strong>Drafting:</strong> Place a <span class="text-yellow">Draft Model</span> adjacent to your Decode Core. It speculatively drafts 3 tokens in advance per iteration.</li>
+                        <li><strong>Verification:</strong> Route the output wires from the Decode Core into the input of a <span class="text-magenta">Validation Gate</span>.</li>
+                        <li><strong>Output Routing:</strong> Connect the output of the <span class="text-magenta">Validation Gate</span> to the Output Sink. It verifies drafted tokens in parallel. Correct guesses accelerate delivery, while bad drafts are flushed!</li>
+                    </ul>
+                </div>
+            </div>
+
+            <button id="btn-close-guide" class="btn-action btn-success" style="margin-top: 20px;">BACK TO SIMULATOR</button>
         </div>
     </div>
 

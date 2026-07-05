@@ -1138,6 +1138,54 @@ lvlCards.forEach(lvl => {
     }
 });
 
+// Architecture Guide Modal triggers
+const btnGuide = document.getElementById('btn-guide');
+if (btnGuide) {
+    btnGuide.onclick = () => {
+        const guideOverlay = document.getElementById('guide-overlay');
+        if (guideOverlay) {
+            guideOverlay.classList.remove('hidden');
+            // Auto open the current level tab
+            const tabId = currentLevelIndex === 1 ? 'tab-lvl1' : (currentLevelIndex === 2 ? 'tab-lvl2' : 'tab-lvl3');
+            switchTab(tabId);
+            playBleep(800, 0.05, "sine", 0.05);
+        }
+    };
+}
+
+const btnCloseGuide = document.getElementById('btn-close-guide');
+if (btnCloseGuide) {
+    btnCloseGuide.onclick = () => {
+        const guideOverlay = document.getElementById('guide-overlay');
+        if (guideOverlay) {
+            guideOverlay.classList.add('hidden');
+            playBleep(600, 0.05, "sine", 0.05);
+        }
+    };
+}
+
+// Tab Switching logic
+function switchTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.tab === tabId) {
+            btn.classList.add('active');
+        }
+    });
+    const activeContent = document.getElementById(tabId);
+    if (activeContent) activeContent.classList.add('active');
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.onclick = () => {
+        switchTab(btn.dataset.tab);
+        playBleep(700, 0.04, "sine", 0.03);
+    };
+});
+
 // --- Main Engine Simulation Loop ---
 let lastTimestamp = 0;
 function gameLoop(timestamp) {

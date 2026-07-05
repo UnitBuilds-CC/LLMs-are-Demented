@@ -770,3 +770,73 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--cyan);
 }
+
+/* GUIDE / DOCUMENTATION STYLES */
+.guide-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 15px 0;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 12px;
+}
+
+.tab-btn {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 0.72rem;
+    padding: 8px 14px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.tab-btn:hover {
+    border-color: var(--border-hover);
+    color: #ffffff;
+}
+
+.tab-btn.active {
+    background: var(--cyan);
+    color: #030712;
+    border-color: var(--cyan);
+    box-shadow: 0 0 10px var(--cyan-glow);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.guide-body {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255,255,255,0.03);
+    border-radius: 8px;
+    padding: 18px;
+    text-align: left;
+    max-height: 40vh;
+    overflow-y: auto;
+}
+
+.guide-list {
+    margin-left: 20px;
+    margin-top: 8px;
+    margin-bottom: 12px;
+    font-size: 0.76rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.guide-list strong {
+    color: #ffffff;
+}
+
