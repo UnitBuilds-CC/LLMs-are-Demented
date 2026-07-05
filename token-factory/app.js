@@ -780,12 +780,10 @@ function updateSimulation() {
                     }
                 }
 
-                // E. Wire Conduits forwarding
+                // E. Conduit Wire Propagation
                 else if (node.type === "conduit") {
-                    if (node.inputBuffer.length > 0) {
+                    while (node.inputBuffer.length > 0) {
                         const packet = node.inputBuffer.shift();
-                        
-                        // Move packet along wire facing direction
                         const next = getNextCell(r, c, node.direction);
                         if (next) {
                             packet.targetRow = next.r;
