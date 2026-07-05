@@ -880,11 +880,13 @@ function handleResize() {
 }
 
 function renderGrid() {
+    if (!grid || grid.length === 0) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // 1. Draw grid background cells
     for (let r = 0; r < GRID_ROWS; r++) {
         for (let c = 0; c < GRID_COLS; c++) {
+            if (!grid[r]) continue;
             const rx = c * TILE_SIZE;
             const ry = r * TILE_SIZE;
 
@@ -1126,6 +1128,7 @@ function gameLoop(timestamp) {
 
 // Start Setup on load
 window.addEventListener('load', () => {
+    initGrid();
     handleResize();
     window.addEventListener('resize', handleResize);
     
