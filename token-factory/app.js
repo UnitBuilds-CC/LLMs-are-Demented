@@ -81,8 +81,8 @@ const levels = {
     3: {
         id: 3,
         title: "LEVEL 03 // SPECULATIVE SPEEDUP",
-        desc: "High volume pipeline. Basic autoregressive generation is too slow to hit the 95 TPS client target. Integrate a cheap Speculative Drafter and a Validation Gate to validate 3 tokens in parallel per step.",
-        targetTps: 95.0,
+        desc: "High volume pipeline. Basic autoregressive generation is too slow to hit the 120 TPS client target. Integrate a cheap Speculative Drafter and a Validation Gate to validate 3 tokens in parallel per step.",
+        targetTps: 120.0,
         maxVram: 5120,
         unlocked: ["conduit", "source", "prefill", "decode", "vllm", "drafter", "validator", "sink"],
         spawnRate: 20, // Spawns request every 20 frames per source
