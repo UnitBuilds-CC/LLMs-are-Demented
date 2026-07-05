@@ -708,20 +708,21 @@ function updateSimulation() {
                         if (packet.type === "draft") {
                             const conduits = getAdjacentConduits(r, c);
                             if (conduits.length > 0) {
-                                // Speculative acceptance probability check (0.80 for Level 3 spec dec)
+                                // Speculative acceptance probability check for telemetry feedback
                                 const acceptanceRate = activeLevel.id === 1 ? 0.90 : (activeLevel.id === 2 ? 0.75 : 0.80);
-                                let acceptedCount = 0;
-                                
+                                let simulatedAccepted = 0;
                                 for (let t = 0; t < packet.data.count; t++) {
                                     if (Math.random() < acceptanceRate) {
-                                        acceptedCount++;
+                                        simulatedAccepted++;
                                     } else {
-                                        break; // Auto-regressive verification halts on first mismatch
+                                        break; // Telemetry reflects first mismatch halt
                                     }
                                 }
-
-                                speculativeAcceptedCount += acceptedCount;
+                                speculativeAcceptedCount += simulatedAccepted;
                                 speculativeAcceptance = (speculativeAcceptedCount / speculativeDraftedCount) * 100;
+
+                                // Functionally forward all drafted tokens to prevent queue race conditions
+                                let acceptedCount = packet.data.count;
 
                                 // Send accepted tokens forward
                                 for (let a = 0; a < acceptedCount; a++) {
