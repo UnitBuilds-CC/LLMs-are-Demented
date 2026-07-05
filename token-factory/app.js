@@ -803,7 +803,7 @@ function updateSimulation() {
                         const packet = node.inputBuffer.shift();
                         if (packet.type === "token") {
                             totalTokensDelivered++;
-                            deliveryTicks.push(gameTime);
+                            deliveryTicks.push(performance.now());
                             playBleep(1000, 0.02, "sine", 0.03); // Pop click
                             
                             // Spawn successful delivery tiny particles
@@ -824,8 +824,9 @@ function updateSimulation() {
             }
         }
 
-        // Calculate rolling throughput (TPS) over last 5 seconds (300 frames)
-        while (deliveryTicks.length > 0 && deliveryTicks[0] < gameTime - 300) {
+        // Calculate rolling throughput (TPS) over last 5 seconds (5000ms real time)
+        const now = performance.now();
+        while (deliveryTicks.length > 0 && deliveryTicks[0] < now - 5000) {
             deliveryTicks.shift();
         }
         tps = deliveryTicks.length / 5;
