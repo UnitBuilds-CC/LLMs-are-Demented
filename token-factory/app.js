@@ -704,8 +704,8 @@ function updateSimulation() {
                         if (packet.type === "draft") {
                             const conduits = getAdjacentConduits(r, c);
                             if (conduits.length > 0) {
-                                // Speculative acceptance probability check
-                                const acceptanceRate = activeLevel.id === 1 ? 0.90 : (activeLevel.id === 2 ? 0.70 : 0.55);
+                                // Speculative acceptance probability check (0.80 for Level 3 spec dec)
+                                const acceptanceRate = activeLevel.id === 1 ? 0.90 : (activeLevel.id === 2 ? 0.75 : 0.80);
                                 let acceptedCount = 0;
                                 
                                 for (let t = 0; t < packet.data.count; t++) {
