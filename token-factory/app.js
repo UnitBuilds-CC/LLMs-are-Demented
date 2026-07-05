@@ -65,7 +65,7 @@ const levels = {
         targetTps: 30.0,
         maxVram: 4096,
         unlocked: ["conduit", "source", "prefill", "decode", "sink"],
-        spawnRate: 180, // Ticks between requests
+        spawnRate: 40, // Spawns request every 40 frames (~0.66s)
         promptSize: 32 // Average tokens per prompt
     },
     2: {
@@ -75,7 +75,7 @@ const levels = {
         targetTps: 60.0,
         maxVram: 3072,
         unlocked: ["conduit", "source", "prefill", "decode", "vllm", "sink"],
-        spawnRate: 120,
+        spawnRate: 45, // Spawns request every 45 frames per source
         promptSize: 96
     },
     3: {
@@ -85,7 +85,7 @@ const levels = {
         targetTps: 120.0,
         maxVram: 5120,
         unlocked: ["conduit", "source", "prefill", "decode", "vllm", "drafter", "validator", "sink"],
-        spawnRate: 80,
+        spawnRate: 50, // Spawns request every 50 frames per source
         promptSize: 64
     }
 };
