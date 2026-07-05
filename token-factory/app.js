@@ -81,8 +81,8 @@ const levels = {
     3: {
         id: 3,
         title: "LEVEL 03 // SPECULATIVE SPEEDUP",
-        desc: "High volume pipeline. Basic autoregressive generation is too slow to hit the 120 TPS client target. Integrate a cheap Speculative Drafter and a Validation Gate to validate 3 tokens in parallel per step.",
-        targetTps: 120.0,
+        desc: "High volume pipeline. Basic autoregressive generation is too slow to hit the 95 TPS client target. Integrate a cheap Speculative Drafter and a Validation Gate to validate 3 tokens in parallel per step.",
+        targetTps: 95.0,
         maxVram: 5120,
         unlocked: ["conduit", "source", "prefill", "decode", "vllm", "drafter", "validator", "sink"],
         spawnRate: 50, // Spawns request every 50 frames per source
@@ -301,6 +301,10 @@ function loadLevel(lvlId) {
     document.getElementById('txt-level-desc').innerText = activeLevel.desc;
     document.getElementById('lbl-target-tps').innerText = activeLevel.targetTps.toFixed(1);
     document.getElementById('lbl-max-vram').innerText = activeLevel.maxVram + " MB";
+    const tpsTargetHUD = document.getElementById('txt-tps-target');
+    if (tpsTargetHUD) {
+        tpsTargetHUD.innerText = `Target: ${activeLevel.targetTps.toFixed(1)} TPS`;
+    }
 
     // Setup initial spawn queue and output ports based on level design
     if (lvlId === 1) {
