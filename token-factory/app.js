@@ -1071,47 +1071,71 @@ document.getElementById('btn-sound').onclick = () => {
 // Simulation Speed Controls
 const speeds = [1, 2, 4];
 speeds.forEach((spd, idx) => {
-    document.getElementById(`btn-speed-${spd}`).onclick = () => {
-        simulationSpeed = spd;
-        document.querySelectorAll('.btn-speed').forEach(b => b.classList.remove('active'));
-        document.getElementById(`btn-speed-${spd}`).classList.add('active');
-        playBleep(500 + idx * 100, 0.05, "sine", 0.04);
-    };
+    const btn = document.getElementById(`btn-speed-${spd}`);
+    if (btn) {
+        btn.onclick = () => {
+            simulationSpeed = spd;
+            document.querySelectorAll('.btn-speed').forEach(b => b.classList.remove('active'));
+            const activeBtn = document.getElementById(`btn-speed-${spd}`);
+            if (activeBtn) activeBtn.classList.add('active');
+            playBleep(500 + idx * 100, 0.05, "sine", 0.04);
+        };
+    }
 });
 
 // Reallocate retry click handler
-document.getElementById('btn-oom-retry').onclick = () => {
-    document.getElementById('oom-overlay').classList.add('hidden');
-    loadLevel(currentLevelIndex);
-};
+const btnOomRetry = document.getElementById('btn-oom-retry');
+if (btnOomRetry) {
+    btnOomRetry.onclick = () => {
+        const oomOverlay = document.getElementById('oom-overlay');
+        if (oomOverlay) oomOverlay.classList.add('hidden');
+        loadLevel(currentLevelIndex);
+    };
+}
 
 // Victory Navigation Buttons
-document.getElementById('btn-next-level').onclick = () => {
-    document.getElementById('victory-overlay').classList.add('hidden');
-    if (currentLevelIndex < 3) {
-        loadLevel(currentLevelIndex + 1);
-    } else {
-        // Return to selection
-        document.getElementById('level-select-overlay').classList.remove('hidden');
-    }
-};
+const btnNextLvl = document.getElementById('btn-next-level');
+if (btnNextLvl) {
+    btnNextLvl.onclick = () => {
+        const vicOverlay = document.getElementById('victory-overlay');
+        if (vicOverlay) vicOverlay.classList.add('hidden');
+        if (currentLevelIndex < 3) {
+            loadLevel(currentLevelIndex + 1);
+        } else {
+            // Return to selection
+            const lvlSelect = document.getElementById('level-select-overlay');
+            if (lvlSelect) lvlSelect.classList.remove('hidden');
+        }
+    };
+}
 
-document.getElementById('btn-replay').onclick = () => {
-    document.getElementById('victory-overlay').classList.add('hidden');
-    loadLevel(currentLevelIndex);
-};
+const btnReplay = document.getElementById('btn-replay');
+if (btnReplay) {
+    btnReplay.onclick = () => {
+        const vicOverlay = document.getElementById('victory-overlay');
+        if (vicOverlay) vicOverlay.classList.add('hidden');
+        loadLevel(currentLevelIndex);
+    };
+}
 
-document.getElementById('btn-portal').onclick = () => {
-    window.location.href = "../";
-};
+const btnPortal = document.getElementById('btn-portal');
+if (btnPortal) {
+    btnPortal.onclick = () => {
+        window.location.href = "../";
+    };
+}
 
 // Level Select Card triggers
 const lvlCards = [1, 2, 3];
 lvlCards.forEach(lvl => {
-    document.getElementById(`card-lvl-${lvl}`).onclick = () => {
-        document.getElementById('level-select-overlay').classList.add('hidden');
-        loadLevel(lvl);
-    };
+    const card = document.getElementById(`card-lvl-${lvl}`);
+    if (card) {
+        card.onclick = () => {
+            const lvlSelect = document.getElementById('level-select-overlay');
+            if (lvlSelect) lvlSelect.classList.add('hidden');
+            loadLevel(lvl);
+        };
+    }
 });
 
 // --- Main Engine Simulation Loop ---
