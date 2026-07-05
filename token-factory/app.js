@@ -658,7 +658,7 @@ function updateSimulation() {
                                     "draft", 
                                     dest.r, 
                                     dest.c, 
-                                    { startTick: req.startTick, count: 3 }
+                                    { startTick: req.startTick, count: 3, srcRow: r, srcCol: c }
                                 ));
                                 req.generated += 3;
                                 playBleep(900, 0.03, "sine", 0.05);
@@ -734,6 +734,17 @@ function updateSimulation() {
 
                                 // Send rollback signal particles if rejection occurred
                                 if (acceptedCount < packet.data.count) {
+                                    const rejectedCount = packet.data.count - acceptedCount;
+                                    // Rollback the Decode Core progress
+                                    if (packet.data.srcRow !== undefined && packet.data.srcCol !== undefined) {
+                                        const srcNode = grid[packet.data.srcRow][packet.data.srcCol];
+                                        if (srcNode && srcNode.type === "decode" && srcNode.activeRequests.length > 0) {
+                                            srcNode.activeRequests[0].generated -= rejectedCount;
+                                            if (srcNode.activeRequests[0].generated < 0) {
+                                                srcNode.activeRequests[0].generated = 0;
+                                            }
+                                        }
+                                    }
                                     // Spawn validation fail warning particles
                                     for (let k = 0; k < 6; k++) {
                                         particles.push(new Particle(
