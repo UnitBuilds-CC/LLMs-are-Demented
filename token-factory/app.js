@@ -627,8 +627,8 @@ function updateSimulation() {
                     // Autoregressive generation
                     node.cooldown--;
                     if (node.cooldown <= 0 && node.activeRequests.length > 0) {
-                        // Base decode delay (e.g. 10 ticks per autoregressive step)
-                        node.cooldown = 12; 
+                        // Base decode delay: generate a token every 2 frames
+                        node.cooldown = 2; 
                         
                         // Check if speculative drafter is adjacent to boost speed!
                         let speculativeDrafter = null;
