@@ -1227,12 +1227,33 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 });
 
 // --- Main Engine Simulation Loop ---
+// --- Main Engine Simulation Loop ---
 let lastTimestamp = 0;
+let accumulator = 0;
+const physicsTimeStep = 1000 / 60; // Fixed 16.67ms timestep (60 ticks/sec)
+
 function gameLoop(timestamp) {
-    if (!lastTimestamp) lastTimestamp = timestamp;
+    if (!lastTimestamp) {
+        lastTimestamp = timestamp;
+        requestAnimationFrame(gameLoop);
+        return;
+    }
     
-    // Simulation updates
-    updateSimulation();
+    let elapsed = timestamp - lastTimestamp;
+    lastTimestamp = timestamp;
+    
+    // Cap elapsed time to 100ms to prevent spiral of death during debugging/background tab
+    if (elapsed > 100) elapsed = 100;
+    
+    accumulator += elapsed;
+    
+    // Catch up simulation steps to match real elapsed time
+    while (accumulator >= physicsTimeStep) {
+        updateSimulation();
+        accumulator -= physicsTimeStep;
+    }
+    
+    // Render once per frame
     renderGrid();
     
     requestAnimationFrame(gameLoop);
