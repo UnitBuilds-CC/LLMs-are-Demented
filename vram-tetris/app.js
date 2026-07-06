@@ -58,7 +58,7 @@ const SOUNDS = {
 // --- Game Configurations & Constants ---
 const COLS = 10;
 const ROWS = 20;
-const BLOCK_SIZE = 30; // 30px * 10 = 300px width; 30px * 20 = 600px height
+const BLOCK_SIZE = 22; // 22px * 10 = 220px width; 22px * 20 = 440px height
 const COLORS = {
     I: '#00f0ff', // Cyan
     O: '#ffff00', // Yellow
@@ -594,7 +594,7 @@ function drawPreviewCanvas(pCanvas, pCtx, piece) {
 
     const shape = piece.shape;
     const size = shape.length;
-    const scale = 20; // smaller blocks for previews
+    const scale = 14; // smaller blocks for previews
     const offsetX = (pCanvas.width - size * scale) / 2;
     const offsetY = (pCanvas.height - size * scale) / 2;
 

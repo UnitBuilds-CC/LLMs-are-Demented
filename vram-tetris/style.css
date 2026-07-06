@@ -144,7 +144,7 @@ h1 {
 /* MAIN LAYOUT */
 .main-layout {
     display: grid;
-    grid-template-columns: 310px 1fr 310px;
+    grid-template-columns: 240px 1fr 240px;
     gap: 15px;
     flex-grow: 1;
     min-height: 0; /* Important for scroll sizing */
@@ -155,21 +155,21 @@ h1 {
     background: var(--bg-panel);
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    padding: 15px;
+    padding: 10px 15px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
     backdrop-filter: blur(8px);
     box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.05);
 }
 
 .panel-header {
     border-bottom: 1px solid var(--border-color);
-    padding-bottom: 10px;
+    padding-bottom: 5px;
 }
 
 .panel-header h2 {
-    font-size: 1rem;
+    font-size: 0.85rem;
     font-family: 'Share Tech Mono', monospace;
     color: var(--text-muted);
     letter-spacing: 1px;
@@ -177,23 +177,23 @@ h1 {
 
 /* Stats Cards */
 .stats-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
 }
 
 .stat-card {
     background: rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 6px;
-    padding: 15px;
+    padding: 8px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 4px;
 }
 
 .stat-label {
-    font-size: 0.75rem;
+    font-size: 0.65rem;
     color: var(--text-muted);
     letter-spacing: 1px;
     font-weight: 600;
@@ -201,7 +201,7 @@ h1 {
 
 .stat-value {
     font-family: 'Share Tech Mono', monospace;
-    font-size: 1.6rem;
+    font-size: 1.15rem;
     font-weight: 800;
 }
 
@@ -221,8 +221,9 @@ h1 {
 }
 
 .subtext {
-    font-size: 0.7rem;
+    font-size: 0.6rem;
     color: var(--text-muted);
+    margin-top: -2px;
 }
 
 /* Progress bar styles */
@@ -250,13 +251,13 @@ h1 {
 .mode-selector {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
     border-top: 1px solid var(--border-color);
-    padding-top: 15px;
+    padding-top: 8px;
 }
 
 .mode-selector h3 {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-family: 'Share Tech Mono', monospace;
     color: var(--text-muted);
     letter-spacing: 1px;
@@ -265,16 +266,16 @@ h1 {
 .mode-btns {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    gap: 8px;
 }
 
 .mode-btn {
     background: rgba(0, 0, 0, 0.5);
     border: 1px solid rgba(0, 240, 255, 0.2);
     color: var(--text-muted);
-    padding: 10px 0;
+    padding: 6px 0;
     font-family: 'Share Tech Mono', monospace;
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     border-radius: 4px;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -293,10 +294,10 @@ h1 {
 }
 
 .mode-desc {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: var(--text-muted);
-    line-height: 1.4;
-    min-height: 60px;
+    line-height: 1.35;
+    min-height: 48px;
 }
 
 /* CENTER PANEL: GAME CANVAS */
