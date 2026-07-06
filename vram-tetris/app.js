@@ -58,7 +58,7 @@ const SOUNDS = {
 // --- Game Configurations & Constants ---
 const COLS = 10;
 const ROWS = 20;
-const BLOCK_SIZE = 36; // 36px * 10 = 360px width; 36px * 20 = 720px height
+const BLOCK_SIZE = 30; // 30px * 10 = 300px width; 30px * 20 = 600px height
 const COLORS = {
     I: '#00f0ff', // Cyan
     O: '#ffff00', // Yellow
@@ -658,6 +658,8 @@ function triggerOomCrash() {
 // --- DOM Event Wiring ---
 window.addEventListener('load', () => {
     canvas = document.getElementById('game-canvas');
+    canvas.width = COLS * BLOCK_SIZE;
+    canvas.height = ROWS * BLOCK_SIZE;
     ctx = canvas.getContext('2d');
 
     holdCanvas = document.getElementById('hold-canvas');
