@@ -608,12 +608,40 @@ h1 {
     color: #a5b4fc;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
+}
+
+/* Custom Dark scrollbars for console logs */
+.console-body::-webkit-scrollbar {
+    width: 4px;
+}
+
+.console-body::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 2px;
+}
+
+.console-body::-webkit-scrollbar-thumb {
+    background: rgba(0, 240, 255, 0.15);
+    border-radius: 2px;
+}
+
+.console-body::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 240, 255, 0.4);
 }
 
 .console-log-line {
     display: flex;
-    gap: 10px;
+    flex-direction: column;
+    gap: 2px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+    padding-bottom: 4px;
+}
+
+.log-meta {
+    display: flex;
+    gap: 8px;
+    font-size: 0.65rem;
 }
 
 .console-log-line .timestamp {
@@ -638,6 +666,8 @@ h1 {
 
 .console-log-line .log-text {
     word-break: break-all;
+    line-height: 1.3;
+    padding-left: 2px;
 }
 
 /* ANIMATIONS */

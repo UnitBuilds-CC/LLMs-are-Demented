@@ -153,9 +153,11 @@ function addSystemLog(text, type = "info") {
     const logLine = document.createElement('div');
     logLine.className = 'console-log-line';
     logLine.innerHTML = `
-        <span class="timestamp">[${timeStr}]</span>
-        <span class="log-tag ${type}">${type.toUpperCase()}</span>
-        <span class="log-text">${text}</span>
+        <div class="log-meta">
+            <span class="timestamp">[${timeStr}]</span>
+            <span class="log-tag ${type}">${type.toUpperCase()}</span>
+        </div>
+        <div class="log-text">${text}</div>
     `;
 
     consoleLogs.appendChild(logLine);
