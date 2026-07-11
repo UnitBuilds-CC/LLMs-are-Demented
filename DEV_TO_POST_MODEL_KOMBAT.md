@@ -108,3 +108,7 @@ Can you reach the top of the ladder and claim victory? Click **COPY SCORE** at t
 * What was your longest combo chain on the ladder?
 
 {% embed https://github.com/UnitBuilds-CC/Model-Kombat %}
+
+---
+
+*Disclaimer: AI was used throughout this project, it is just fitting that it would co-author with me, so special thanks to the Foundry for its tireless hours toiling away and Gemini for producing the cover image.*
