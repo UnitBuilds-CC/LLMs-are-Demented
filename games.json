@@ -1,0 +1,80 @@
+[
+  {
+    "index": "SYS_01",
+    "title": "LLMs Are Demented",
+    "description": "Solve a standard crossword puzzle while battling simulated memory evictions and temperature drift.",
+    "status": "ONLINE",
+    "url": "crossword/",
+    "path": "llms-are-demented"
+  },
+  {
+    "index": "SYS_02",
+    "title": "The Gating Crisis",
+    "description": "Route multi-modal token streams to specialized expert models in a live gating network load-balancer.",
+    "status": "ONLINE",
+    "path": "gating-crisis"
+  },
+  {
+    "index": "SYS_03",
+    "title": "Tokenizer Sandbox",
+    "description": "Explore BPE tokenization. Understand character blindness, space inflation, and bypass security filters.",
+    "status": "ONLINE",
+    "path": "tokenizer-sandbox"
+  },
+  {
+    "index": "SYS_04",
+    "title": "GPU Survivors",
+    "description": "Survive training waves, collect FLOPs, and scale a neural network model to 1T parameters.",
+    "status": "ONLINE",
+    "path": "gpu-survivors"
+  },
+  {
+    "index": "SYS_05",
+    "title": "Token Factory",
+    "description": "Design pipeline serving infrastructures. Route batch queues, page KV-caches, and run speculative drafters.",
+    "status": "ONLINE",
+    "path": "token-factory"
+  },
+  {
+    "index": "SYS_06",
+    "title": "Vector Strike",
+    "description": "Defend a vector database against adversarial semantic queries using custom dimensions and HNSW routing graph linkages.",
+    "status": "ONLINE",
+    "path": "vector-strike"
+  },
+  {
+    "index": "SYS_07",
+    "title": "Paged Attention",
+    "description": "Scale context length dynamically using virtual page tables, block allocations, and zero-waste memory mappings.",
+    "status": "COMING SOON",
+    "path": "paged-attention"
+  },
+  {
+    "index": "SYS_08",
+    "title": "Epoch Duel",
+    "description": "Duel a local optimizer by configuring learning rates and momentum vectors to descend a loss landscape.",
+    "status": "ONLINE",
+    "path": "epoch-duel"
+  },
+  {
+    "index": "SYS_09",
+    "title": "Model Kombat",
+    "description": "Pick your model, charge your params, and evolve into MoE in this progressive-rendering fighting game.",
+    "status": "ONLINE",
+    "path": "llm-fighter"
+  },
+  {
+    "index": "SYS_10",
+    "title": "Context Tower",
+    "description": "Build an LLM prompt stack block-by-block. Balance instruction alignment and prevent base-level context collapse.",
+    "status": "ONLINE",
+    "path": "context-tower"
+  },
+  {
+    "index": "SYS_11",
+    "title": "Censorship Dial",
+    "description": "Balance helpfulness and harmlessness metrics in an RLHF policy training loop using dynamic parameters.",
+    "status": "ONLINE",
+    "path": "censorship-dial"
+  }
+]
