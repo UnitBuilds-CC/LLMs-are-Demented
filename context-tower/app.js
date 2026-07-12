@@ -332,7 +332,7 @@ function spawnNextSwingBlock() {
 }
 
 function dropActiveBlock(choiceIndex) {
-    if (fsm.currentState !== 'PLAYING') return;
+    if (fsm.currentStateName !== 'PLAYING') return;
     if (gameState.fallingBlock) return;
     
     const choice = gameState.currentChoices[choiceIndex];
@@ -744,7 +744,7 @@ function drawGame() {
     const swingY = pivotY + Math.cos(angle) * ropeLen;
     
     // Draw rope swing
-    if (!gameState.fallingBlock && fsm.currentState === 'PLAYING' && topBlock) {
+    if (!gameState.fallingBlock && fsm.currentStateName === 'PLAYING' && topBlock) {
         ctx.save();
         
         ctx.strokeStyle = "rgba(189, 0, 255, 0.38)";
@@ -770,7 +770,7 @@ function drawGame() {
     }
     
     // Draw swing block preview
-    if (gameState.swingBlock && !gameState.fallingBlock && fsm.currentState === 'PLAYING') {
+    if (gameState.swingBlock && !gameState.fallingBlock && fsm.currentStateName === 'PLAYING') {
         const sb = gameState.swingBlock;
         ctx.save();
         ctx.translate(swingX, swingY - camera.y);
@@ -976,7 +976,7 @@ document.getElementById('btn-start').addEventListener('click', () => {
     AIEngine.Audio.playClick();
     
     // Play introductory RPG typewriter dialog on first run
-    if (AIEngine.State.get('tokens') === 0 && fsm.currentState === 'MENU') {
+    if (AIEngine.State.get('tokens') === 0 && fsm.currentStateName === 'MENU') {
         AIEngine.UI.showDialog("SYS_10 RUNTIME PREPARATION:\nStack prompt directives and user prompts to compile your context window. Guard against adversarial injections and input drift.\n\nReady to compile alignment?", {
             speed: 25,
             choices: [
@@ -989,7 +989,7 @@ document.getElementById('btn-start').addEventListener('click', () => {
 });
 
 window.addEventListener('keydown', (e) => {
-    if (fsm.currentState !== 'PLAYING') return;
+    if (fsm.currentStateName !== 'PLAYING') return;
     
     if (e.key === '1') dropActiveBlock(0);
     if (e.key === '2') dropActiveBlock(1);
@@ -1015,7 +1015,7 @@ document.querySelectorAll('.btn-preset').forEach(btn => {
         const conf = getPreset();
         AIEngine.State.set('maxTokens', conf.maxTokens);
         
-        if (fsm.currentState === 'PLAYING') {
+        if (fsm.currentStateName === 'PLAYING') {
             initGame();
         }
     });
